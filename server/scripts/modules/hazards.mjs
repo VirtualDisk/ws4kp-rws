@@ -6,6 +6,7 @@ import WeatherDisplay from './weatherdisplay.mjs';
 import { registerDisplay } from './navigation.mjs';
 import calculateScrollTiming from './utils/scroll-timing.mjs';
 import { debugFlag } from './utils/debug.mjs';
+import Setting from './utils/setting.mjs';
 
 const hazardLevels = {
 	Extreme: 10,
@@ -34,6 +35,10 @@ class Hazards extends WeatherDisplay {
 		// take note of the already-shown alert ids
 		this.viewedAlerts = new Set();
 		this.viewedGetCount = 0;
+
+		// manual override state (set via setOverride from the settings UI)
+		this.overrideEnabled = false;
+		this.overrideText = '';
 
 		// cache for scroll calculations
 		// This cache is essential because baseCountChange() is called 25 times per second (every 40ms)
@@ -68,24 +73,37 @@ class Hazards extends WeatherDisplay {
 		}
 
 		try {
-			// get the forecast using centralized safe handling
-			const url = new URL('https://api.weather.gov/alerts/active');
-			url.searchParams.append('point', `${this.weatherParameters.latitude},${this.weatherParameters.longitude}`);
-			url.searchParams.append('status', 'actual');
-			const alerts = await safeJson(url, { retryCount: 3, stillWaiting: () => this.stillWaiting() });
-
-			if (!alerts) {
-				if (debugFlag('verbose-failures')) {
-					console.warn('Active Alerts request failed; assuming no active alerts');
-				}
-				this.data = [];
+			if (this.overrideEnabled) {
+				// manual override: skip the live fetch, use the operator-supplied text as a single synthetic alert
+				this.data = this.overrideText ? [{
+					id: 'custom-override',
+					properties: {
+						event: 'Custom Alert',
+						description: this.overrideText,
+						severity: 'Severe',
+						urgency: 'Immediate',
+					},
+				}] : [];
 			} else {
-				const allUnsortedAlerts = alerts.features ?? [];
-				const unsortedAlerts = allUnsortedAlerts.slice(0, 5);
-				const hasImmediate = unsortedAlerts.reduce((acc, hazard) => acc || hazard.properties.urgency === 'Immediate', false);
-				const sortedAlerts = unsortedAlerts.sort((a, b) => (calcSeverity(b.properties.severity, b.properties.event)) - (calcSeverity(a.properties.severity, a.properties.event)));
-				const filteredAlerts = sortedAlerts.filter((hazard) => hazard.properties.severity !== 'Unknown' && (!hasImmediate || (hazard.properties.urgency === 'Immediate')));
-				this.data = filteredAlerts;
+				// get the forecast using centralized safe handling
+				const url = new URL('https://api.weather.gov/alerts/active');
+				url.searchParams.append('point', `${this.weatherParameters.latitude},${this.weatherParameters.longitude}`);
+				url.searchParams.append('status', 'actual');
+				const alerts = await safeJson(url, { retryCount: 3, stillWaiting: () => this.stillWaiting() });
+
+				if (!alerts) {
+					if (debugFlag('verbose-failures')) {
+						console.warn('Active Alerts request failed; assuming no active alerts');
+					}
+					this.data = [];
+				} else {
+					const allUnsortedAlerts = alerts.features ?? [];
+					const unsortedAlerts = allUnsortedAlerts.slice(0, 5);
+					const hasImmediate = unsortedAlerts.reduce((acc, hazard) => acc || hazard.properties.urgency === 'Immediate', false);
+					const sortedAlerts = unsortedAlerts.sort((a, b) => (calcSeverity(b.properties.severity, b.properties.event)) - (calcSeverity(a.properties.severity, a.properties.event)));
+					const filteredAlerts = sortedAlerts.filter((hazard) => hazard.properties.severity !== 'Unknown' && (!hasImmediate || (hazard.properties.urgency === 'Immediate')));
+					this.data = filteredAlerts;
+				}
 			}
 
 			// every 10 times through the get process (10 minutes), reset the viewed messages
@@ -232,6 +250,13 @@ class Hazards extends WeatherDisplay {
 		return superValue;
 	}
 
+	// set or clear the manual override; re-runs the data cycle immediately if location data is already available
+	setOverride(enabled, text) {
+		this.overrideEnabled = enabled;
+		this.overrideText = text;
+		if (this.weatherParameters) this.getData(this.weatherParameters, true);
+	}
+
 	// make data available outside this class
 	// promise allows for data to be requested before it is available
 	async getHazards(stillWaiting) {
@@ -254,5 +279,40 @@ const calcSeverity = (severity, event) => {
 // register display
 const display = new Hazards(0, 'hazards', true);
 registerDisplay(display);
+
+// manual override settings, mirroring custom-scroll-text.mjs's customText/customTextEnable pattern
+let firstRun = true;
+
+const updateOverride = () => {
+	if (firstRun) return;
+	display.setOverride(hazardsOverrideEnable.value, hazardsOverrideText.value);
+};
+
+const changeEnable = (newValue) => {
+	updateOverride();
+	const stringEntry = document.getElementById('settings-hazardsOverrideText-string');
+	if (stringEntry) stringEntry.style.display = newValue ? 'block' : 'none';
+};
+
+const hazardsOverrideEnable = new Setting('hazardsOverrideEnable', {
+	name: 'Override Hazards',
+	defaultValue: false,
+	changeAction: changeEnable,
+});
+
+const hazardsOverrideText = new Setting('hazardsOverrideText', {
+	name: 'Custom Hazard Text',
+	defaultValue: '',
+	type: 'string',
+	changeAction: updateOverride,
+	placeholder: 'Custom hazard/alert text',
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+	const settingsSection = document.querySelector('#settings');
+	settingsSection.append(hazardsOverrideEnable.generate(), hazardsOverrideText.generate());
+	firstRun = false;
+	changeEnable(hazardsOverrideEnable.value);
+});
 
 export default display.getHazards.bind(display);
