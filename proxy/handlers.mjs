@@ -50,3 +50,11 @@ export const forecastProxy = async (req, res) => {
 		skipParams: ['u'],
 	});
 };
+
+// NYISO (New York Independent System Operator) public CSV data proxy
+export const nyisoProxy = async (req, res) => {
+	await cache.handleRequest(req, res, 'https://mis.nyiso.com', {
+		serviceName: 'NYISO',
+		skipParams: [],
+	});
+};

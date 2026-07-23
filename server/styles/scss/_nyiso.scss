@@ -1,0 +1,276 @@
+@use 'shared/_colors'as c;
+@use 'shared/_utils'as u;
+
+// shared column-header/table styling for the NYISO list screens
+@mixin nyiso-column-headers {
+	background-color: c.$column-header;
+	height: 20px;
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+
+	div {
+		display: inline-block;
+		font-family: 'Star4000 Small';
+		font-size: 28px;
+		color: c.$column-header-text;
+		position: absolute;
+		top: -12px;
+		@include u.text-shadow();
+	}
+}
+
+@mixin nyiso-total-stat {
+	text-align: center;
+	padding: 12px 0px 8px 0px;
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.label {
+		font-size: 24px;
+	}
+
+	.value {
+		font-size: 44px;
+	}
+}
+
+.weather-display .main.nyiso-outlook {
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.stats {
+		display: flex;
+		justify-content: space-around;
+		padding-top: 14px;
+
+		.stat {
+			text-align: center;
+
+			.label {
+				font-family: 'Star4000 Small';
+				font-size: 24px;
+				color: c.$column-header-text;
+			}
+
+			.value {
+				font-size: 40px;
+			}
+		}
+	}
+
+	.chart {
+		margin: 20px 40px 0px 40px;
+		height: 250px;
+
+		.bars {
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+		.bar-column {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-end;
+			width: 60px;
+			height: 100%;
+
+			.bar {
+				width: 40px;
+				background: linear-gradient(0deg, c.$gradient-main-background-1, c.$gradient-loading-3);
+				border: 1px solid c.$title-color;
+				position: relative;
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
+			}
+
+			.value-label {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				position: relative;
+				top: -22px;
+				white-space: nowrap;
+			}
+
+			.day-label {
+				font-family: 'Star4000 Small';
+				font-size: 22px;
+				color: c.$column-header-text;
+				margin-top: 4px;
+			}
+
+			&.forecast .bar {
+				background: repeating-linear-gradient(45deg,
+						c.$gradient-main-background-1,
+						c.$gradient-main-background-1 6px,
+						c.$gradient-loading-3 6px,
+						c.$gradient-loading-3 12px);
+			}
+		}
+	}
+
+	.footnote {
+		font-family: 'Star4000 Small';
+		font-size: 18px;
+		color: c.$column-header-text;
+		text-align: right;
+		margin: 6px 20px 0px 0px;
+	}
+}
+
+.weather-display .main.nyiso-fuelmix,
+.weather-display .main.nyiso-load,
+.weather-display .main.nyiso-pricing {
+	overflow-y: hidden;
+
+	.column-headers {
+		@include nyiso-column-headers;
+	}
+
+	.total {
+		@include nyiso-total-stat;
+	}
+}
+
+.weather-display .main.nyiso-fuelmix {
+	.column-headers {
+		.name {
+			left: 60px;
+		}
+
+		.mw {
+			left: 340px;
+			width: 100px;
+			text-align: right;
+		}
+
+		.percent {
+			left: 470px;
+			width: 80px;
+			text-align: right;
+		}
+	}
+
+	.fuel-lines {
+		padding-top: 6px;
+	}
+
+	.fuel-row {
+		font-family: 'Star4000 Small';
+		font-size: 30px;
+		height: 34px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 60px;
+		}
+
+		.mw {
+			left: 340px;
+			width: 100px;
+			text-align: right;
+		}
+
+		.percent {
+			left: 470px;
+			width: 80px;
+			text-align: right;
+		}
+	}
+}
+
+.weather-display .main.nyiso-load {
+	.column-headers {
+		.name {
+			left: 100px;
+		}
+
+		.mw {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+
+	.zone-lines {
+		padding-top: 6px;
+	}
+
+	.zone-row {
+		font-family: 'Star4000 Small';
+		font-size: 28px;
+		height: 26px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 100px;
+		}
+
+		.mw {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+}
+
+.weather-display .main.nyiso-pricing {
+	padding-top: 10px;
+
+	.column-headers {
+		.name {
+			left: 120px;
+		}
+
+		.price {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+
+	.price-lines {
+		padding-top: 10px;
+	}
+
+	.price-row {
+		font-family: 'Star4000 Small';
+		font-size: 32px;
+		height: 34px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 120px;
+		}
+
+		.price {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+}

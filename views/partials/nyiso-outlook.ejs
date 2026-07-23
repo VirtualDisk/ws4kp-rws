@@ -1,0 +1,17 @@
+<%- include('header.ejs', {titleDual: {top: 'Grid Outlook', bottom: 'of the Week'} , hasTime: true }) %>
+<div class="main nyiso-outlook">
+  <div class="stats">
+    <div class="stat">
+      <div class="label">Yesterday's Peak Demand</div>
+      <div class="value peak-value"></div>
+    </div>
+    <div class="stat">
+      <div class="label">Yesterday's Consumption</div>
+      <div class="value avg-value"></div>
+    </div>
+  </div>
+  <div class="chart">
+    <div class="bars"></div>
+  </div>
+  <div class="footnote">* forecast</div>
+</div>

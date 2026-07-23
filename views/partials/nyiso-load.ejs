@@ -1,0 +1,17 @@
+<%- include('header.ejs', {titleDual: {top: 'NY Grid', bottom: 'Current Load'} , hasTime: true }) %>
+<div class="main nyiso-load">
+  <div class="total">
+    <div class="label">NYISO Total Demand</div>
+    <div class="value total-value"></div>
+  </div>
+  <div class="column-headers">
+    <div class="name">ZONE</div>
+    <div class="mw">LOAD</div>
+  </div>
+  <div class="zone-lines">
+    <div class="zone-row template">
+      <div class="name"></div>
+      <div class="mw"></div>
+    </div>
+  </div>
+</div>
