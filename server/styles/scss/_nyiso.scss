@@ -76,7 +76,7 @@
 
 	.chart {
 		margin: 14px 40px 0px 40px;
-		height: 180px;
+		height: 160px;
 
 		.bars {
 			display: flex;
@@ -116,6 +116,13 @@
 				font-size: 22px;
 				color: c.$column-header-text;
 				margin-top: 4px;
+			}
+
+			.high-label {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				color: c.$title-color;
+				white-space: nowrap;
 			}
 
 			&.forecast .bar {
