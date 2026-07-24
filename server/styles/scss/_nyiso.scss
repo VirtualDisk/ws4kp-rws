@@ -1,5 +1,6 @@
 @use 'shared/_colors'as c;
 @use 'shared/_utils'as u;
+@use 'shared/_positions'as p;
 
 // shared column-header/table styling for the NYISO list screens
 @mixin nyiso-column-headers {
@@ -22,18 +23,30 @@
 
 @mixin nyiso-total-stat {
 	text-align: center;
-	padding: 12px 0px 8px 0px;
+	padding: 8px 0px 4px 0px;
 	font-family: 'Star4000';
 	color: c.$title-color;
 	@include u.text-shadow();
 
 	.label {
-		font-size: 24px;
+		font-size: 20px;
 	}
 
 	.value {
-		font-size: 44px;
+		font-size: 34px;
 	}
+}
+
+// content must stay clear of the scrolling ticker bar (#container>.scroll) anchored to
+// the bottom of every weather-display screen, so cap main content to the same budget
+// used elsewhere in the app (see _latest-observations.scss) instead of letting it grow
+// with the data and run underneath the ticker.
+.weather-display .main.nyiso-outlook,
+.weather-display .main.nyiso-fuelmix,
+.weather-display .main.nyiso-load,
+.weather-display .main.nyiso-pricing {
+	max-height: p.$standard-scroll-height;
+	overflow: hidden;
 }
 
 .weather-display .main.nyiso-outlook {
@@ -44,7 +57,7 @@
 	.stats {
 		display: flex;
 		justify-content: space-around;
-		padding-top: 14px;
+		padding-top: 10px;
 
 		.stat {
 			text-align: center;
@@ -62,8 +75,8 @@
 	}
 
 	.chart {
-		margin: 20px 40px 0px 40px;
-		height: 250px;
+		margin: 14px 40px 0px 40px;
+		height: 180px;
 
 		.bars {
 			display: flex;
@@ -120,15 +133,13 @@
 		font-size: 18px;
 		color: c.$column-header-text;
 		text-align: right;
-		margin: 6px 20px 0px 0px;
+		margin: 4px 20px 0px 0px;
 	}
 }
 
 .weather-display .main.nyiso-fuelmix,
 .weather-display .main.nyiso-load,
 .weather-display .main.nyiso-pricing {
-	overflow-y: hidden;
-
 	.column-headers {
 		@include nyiso-column-headers;
 	}
@@ -178,8 +189,8 @@
 
 	.fuel-row {
 		font-family: 'Star4000 Small';
-		font-size: 30px;
-		height: 34px;
+		font-size: 20px;
+		height: 22px;
 		color: c.$title-color;
 		@include u.text-shadow();
 		position: relative;
@@ -225,8 +236,8 @@
 
 	.zone-row {
 		font-family: 'Star4000 Small';
-		font-size: 28px;
-		height: 26px;
+		font-size: 18px;
+		height: 18px;
 		color: c.$title-color;
 		@include u.text-shadow();
 		position: relative;
@@ -248,7 +259,7 @@
 }
 
 .weather-display .main.nyiso-pricing {
-	padding-top: 10px;
+	padding-top: 6px;
 
 	.column-headers {
 		.name {
@@ -263,13 +274,13 @@
 	}
 
 	.price-lines {
-		padding-top: 10px;
+		padding-top: 6px;
 	}
 
 	.price-row {
 		font-family: 'Star4000 Small';
-		font-size: 32px;
-		height: 34px;
+		font-size: 20px;
+		height: 20px;
 		color: c.$title-color;
 		@include u.text-shadow();
 		position: relative;
