@@ -41,16 +41,6 @@
 	color: c.$title-color;
 	@include u.text-shadow();
 
-	.power-plant-bg {
-		position: absolute;
-		right: 10px;
-		bottom: 10px;
-		width: 260px;
-		height: auto;
-		opacity: 0.25;
-		pointer-events: none;
-	}
-
 	.stats {
 		display: flex;
 		justify-content: space-around;
