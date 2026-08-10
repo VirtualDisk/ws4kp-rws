@@ -1,6 +1,6 @@
 {
 	"name": "ws4kp",
-	"version": "7.0.4",
+	"version": "7.1.5",
 	"description": "Welcome to the WeatherStar 4000+ project page!",
 	"main": "index.mjs",
 	"type": "module",
@@ -31,9 +31,10 @@
 		"@zakj/no-sleep": "^0.13.6",
 		"ajv": "^8.17.1",
 		"del": "^8.0.0",
-		"eslint": "^9.0.0",
+		"eslint": "^10.8.0",
 		"eslint-config-airbnb-base": "15.0.0",
 		"eslint-plugin-import": "^2.10.0",
+		"fancy-log": "^2.0.0",
 		"gulp": "^5.0.0",
 		"gulp-concat": "^2.6.1",
 		"gulp-ejs": "^5.1.0",
@@ -44,17 +45,20 @@
 		"gulp-terser": "^2.0.0",
 		"luxon": "^3.0.0",
 		"metar-taf-parser": "^9.0.0",
+		"p-limit": "^7.3.1",
 		"sass": "^1.54.0",
 		"suncalc": "^1.8.0",
 		"swiped-events": "^1.1.4",
 		"terser-webpack-plugin": "^5.3.6",
 		"webpack": "^5.99.9",
-		"webpack-stream": "^7.0.0",
-		"fancy-log": "^2.0.0"
+		"webpack-stream": "^7.0.0"
 	},
 	"dependencies": {
 		"dotenv": "^17.0.1",
-		"ejs": "^5.0.1",
+		"ejs": "^6.0.1",
 		"express": "^5.1.0"
+	},
+	"allowScripts": {
+		"@parcel/watcher@2.6.0": true
 	}
 }

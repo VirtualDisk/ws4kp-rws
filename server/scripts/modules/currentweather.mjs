@@ -234,6 +234,9 @@ class CurrentWeather extends WeatherDisplay {
 		if (this.data.WindGust !== '-') {
 			filledTemplate.querySelector('.row:has(.wind-gust-portrait)').classList.remove('hidden');
 		}
+		if (!Number.isNaN(Number(this.data.Pressure))) {
+			filledTemplate.querySelector('.row.pressure-row').classList.remove('hidden');
+		}
 
 		area.append(filledTemplate);
 

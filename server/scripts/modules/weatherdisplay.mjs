@@ -25,6 +25,7 @@ class WeatherDisplay {
 		this.okToDrawCurrentDateTime = true;
 		this.showOnProgress = true;
 		this.autoRefreshHandle = null;
+		this.drawStartedAt = null;
 
 		// default navigation timing
 		this.timing = {
@@ -175,6 +176,7 @@ class WeatherDisplay {
 		if (this.okToDrawCurrentConditions) postMessage({ type: 'current-weather-scroll', method: 'start' });
 		if (!this.okToDrawCurrentConditions) postMessage({ type: 'current-weather-scroll', method: 'non-display' });
 		if (this.okToDrawCurrentConditions === false) postMessage({ type: 'current-weather-scroll', method: 'hide' });
+		this.sendRenderStart();
 	}
 
 	finishDraw() {
@@ -187,6 +189,7 @@ class WeatherDisplay {
 				this.dateTimeInterval = setInterval(() => this.active && this.drawCurrentDateTime(), 100);
 			}
 		}
+		this.sendRenderEnd();
 	}
 
 	drawCurrentDateTime() {
@@ -229,6 +232,7 @@ class WeatherDisplay {
 
 	hideCanvas() {
 		this.resetNavBaseCount();
+		if (this.elem.classList.contains('show')) { this.sendRenderStart(); }
 		this.elem.classList.remove('show');
 		// used to change backgrounds for widescreen
 		document.querySelector('#divTwc').classList.remove(this.elemId);
@@ -514,6 +518,25 @@ class WeatherDisplay {
 		// refresh time can be forced by the user (for hazards)
 		const refreshTime = this.refreshTime ?? settings.refreshTime.value;
 		this.autoRefreshHandle = this.autoRefreshHandle ?? setInterval(() => this.getData(this.weatherParameters, true), refreshTime);
+	}
+
+	sendRenderStart() {
+		if (!this.drawStartedAt) {
+			this.drawStartedAt = Date.now();
+		}
+		document.dispatchEvent(new Event('ws4kp-render-start'));
+	}
+
+	sendRenderEnd() {
+		requestAnimationFrame(() => requestAnimationFrame(() => {
+			document.dispatchEvent(new CustomEvent('ws4kp-render-end', {
+				detail: {
+					startedAt: this.drawStartedAt,
+					endedAt: Date.now(),
+				},
+			}));
+			this.drawStartedAt = null;
+		}));
 	}
 }
 

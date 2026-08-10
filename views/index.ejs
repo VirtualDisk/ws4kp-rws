@@ -60,6 +60,10 @@
   <script type="module" src="scripts/modules/radar.mjs"></script>
   <script type="module" src="scripts/modules/regionalforecast.mjs"></script>
   <script type="module" src="scripts/modules/travelforecast.mjs"></script>
+  <script type="module" src="scripts/modules/nyiso-outlook.mjs"></script>
+  <script type="module" src="scripts/modules/nyiso-fuelmix.mjs"></script>
+  <script type="module" src="scripts/modules/nyiso-load.mjs"></script>
+  <script type="module" src="scripts/modules/nyiso-pricing.mjs"></script>
   <script type="module" src="scripts/modules/progress.mjs"></script>
   <script type="module" src="scripts/modules/radar.mjs"></script>
   <script type="module" src="scripts/modules/settings.mjs"></script>
@@ -134,6 +138,18 @@
         </div>
         <div id="hazards-html" class="weather-display">
           <%- include('partials/hazards.ejs') %>
+        </div>
+        <div id="nyiso-outlook-html" class="weather-display">
+          <%- include('partials/nyiso-outlook.ejs') %>
+        </div>
+        <div id="nyiso-fuelmix-html" class="weather-display">
+          <%- include('partials/nyiso-fuelmix.ejs') %>
+        </div>
+        <div id="nyiso-load-html" class="weather-display">
+          <%- include('partials/nyiso-load.ejs') %>
+        </div>
+        <div id="nyiso-pricing-html" class="weather-display">
+          <%- include('partials/nyiso-pricing.ejs') %>
         </div>
         <%- include('partials/scroll.ejs') %>
       </div>

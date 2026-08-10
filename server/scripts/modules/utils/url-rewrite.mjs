@@ -16,6 +16,16 @@ const rewriteUrl = (_url) => {
 	// Convert to URL object (for URL objects, creates a copy to avoid mutating the original)
 	const url = new URL(_url);
 
+	// mis.nyiso.com sends no CORS headers at all, unlike the weather.gov family of hosts below,
+	// so it must always be routed through a same-origin proxy (nginx in static deployments,
+	// Express in server deployments) even when no caching backend is otherwise available.
+	if (url.origin === 'https://mis.nyiso.com') {
+		url.protocol = window.location.protocol;
+		url.host = window.location.host;
+		url.pathname = `/nyiso${url.pathname}`;
+		return url;
+	}
+
 	if (!window.WS4KP_SERVER_AVAILABLE) {
 		// If running standalone in the browser, simply return a URL object without rewriting
 		return url;

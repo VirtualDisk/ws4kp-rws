@@ -1,0 +1,20 @@
+<%- include('header.ejs', {titleDual: {top: 'NY Grid', bottom: 'Fuel Mix'} , hasTime: true, nyisoLogo: true }) %>
+<div class="main nyiso-fuelmix">
+  <div class="pie-chart"><img /></div>
+  <div class="column-headers">
+    <div class="name">SOURCE</div>
+    <div class="mw">OUTPUT</div>
+    <div class="percent">SHARE</div>
+  </div>
+  <div class="fuel-lines">
+    <div class="fuel-row template">
+      <div class="name"></div>
+      <div class="mw"></div>
+      <div class="percent"></div>
+    </div>
+  </div>
+  <div class="total">
+    <div class="label">Total Generation</div>
+    <div class="value total-value"></div>
+  </div>
+</div>

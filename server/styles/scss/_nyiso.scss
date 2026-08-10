@@ -1,0 +1,309 @@
+@use 'shared/_colors'as c;
+@use 'shared/_utils'as u;
+@use 'shared/_positions'as p;
+
+// shared column-header/table styling for the NYISO list screens
+@mixin nyiso-column-headers {
+	background-color: c.$column-header;
+	height: 20px;
+	position: relative;
+	width: 100%;
+	overflow: hidden;
+
+	div {
+		display: inline-block;
+		font-family: 'Star4000 Small';
+		font-size: 28px;
+		color: c.$column-header-text;
+		position: absolute;
+		top: -12px;
+		@include u.text-shadow();
+	}
+}
+
+@mixin nyiso-total-stat {
+	text-align: center;
+	padding: 8px 0px 4px 0px;
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.label {
+		font-size: 20px;
+	}
+
+	.value {
+		font-size: 34px;
+	}
+}
+
+// content must stay clear of the scrolling ticker bar (#container>.scroll) anchored to
+// the bottom of every weather-display screen, so cap main content to the same budget
+// used elsewhere in the app (see _latest-observations.scss) instead of letting it grow
+// with the data and run underneath the ticker.
+.weather-display .main.nyiso-outlook,
+.weather-display .main.nyiso-fuelmix,
+.weather-display .main.nyiso-load,
+.weather-display .main.nyiso-pricing {
+	max-height: p.$standard-scroll-height;
+	overflow: hidden;
+}
+
+.weather-display .main.nyiso-outlook {
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.stats {
+		display: flex;
+		justify-content: space-around;
+		padding-top: 10px;
+
+		.stat {
+			text-align: center;
+
+			.label {
+				font-family: 'Star4000 Small';
+				font-size: 24px;
+				color: c.$column-header-text;
+			}
+
+			.value {
+				font-size: 40px;
+			}
+		}
+	}
+
+	.chart {
+		margin: 14px 40px 0px 40px;
+		height: 160px;
+
+		.bars {
+			display: flex;
+			align-items: flex-end;
+			justify-content: space-between;
+			height: 100%;
+		}
+
+		.bar-column {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: flex-end;
+			width: 60px;
+			height: 100%;
+
+			.bar {
+				width: 40px;
+				background: linear-gradient(0deg, c.$gradient-main-background-1, c.$gradient-loading-3);
+				border: 1px solid c.$title-color;
+				position: relative;
+				display: flex;
+				align-items: flex-start;
+				justify-content: center;
+			}
+
+			.value-label {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				position: relative;
+				top: -22px;
+				white-space: nowrap;
+			}
+
+			.day-label {
+				font-family: 'Star4000 Small';
+				font-size: 22px;
+				color: c.$column-header-text;
+				margin-top: 4px;
+			}
+
+			.high-label {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				color: c.$title-color;
+				white-space: nowrap;
+			}
+
+			&.forecast .bar {
+				background: repeating-linear-gradient(45deg,
+						c.$gradient-main-background-1,
+						c.$gradient-main-background-1 6px,
+						c.$gradient-loading-3 6px,
+						c.$gradient-loading-3 12px);
+			}
+		}
+	}
+
+	.footnote {
+		font-family: 'Star4000 Small';
+		font-size: 18px;
+		color: c.$column-header-text;
+		text-align: right;
+		margin: 4px 20px 0px 0px;
+	}
+}
+
+.weather-display .main.nyiso-fuelmix,
+.weather-display .main.nyiso-load,
+.weather-display .main.nyiso-pricing {
+	.column-headers {
+		@include nyiso-column-headers;
+	}
+
+	.total {
+		@include nyiso-total-stat;
+	}
+}
+
+.weather-display .main.nyiso-fuelmix {
+	.pie-chart {
+		position: absolute;
+		top: 40px;
+		right: 30px;
+		width: 220px;
+		height: 220px;
+		opacity: 0.55;
+		pointer-events: none;
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.column-headers {
+		.name {
+			left: 60px;
+		}
+
+		.mw {
+			left: 340px;
+			width: 100px;
+			text-align: right;
+		}
+
+		.percent {
+			left: 470px;
+			width: 80px;
+			text-align: right;
+		}
+	}
+
+	.fuel-lines {
+		padding-top: 6px;
+	}
+
+	.fuel-row {
+		font-family: 'Star4000 Small';
+		font-size: 20px;
+		height: 22px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 60px;
+		}
+
+		.mw {
+			left: 340px;
+			width: 100px;
+			text-align: right;
+		}
+
+		.percent {
+			left: 470px;
+			width: 80px;
+			text-align: right;
+		}
+	}
+}
+
+.weather-display .main.nyiso-load {
+	.column-headers {
+		.name {
+			left: 100px;
+		}
+
+		.mw {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+
+	.zone-lines {
+		padding-top: 6px;
+	}
+
+	.zone-row {
+		font-family: 'Star4000 Small';
+		font-size: 18px;
+		height: 18px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 100px;
+		}
+
+		.mw {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+}
+
+.weather-display .main.nyiso-pricing {
+	padding-top: 6px;
+
+	.column-headers {
+		.name {
+			left: 120px;
+		}
+
+		.price {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+
+	.price-lines {
+		padding-top: 6px;
+	}
+
+	.price-row {
+		font-family: 'Star4000 Small';
+		font-size: 20px;
+		height: 20px;
+		color: c.$title-color;
+		@include u.text-shadow();
+		position: relative;
+
+		>div {
+			position: absolute;
+		}
+
+		.name {
+			left: 120px;
+		}
+
+		.price {
+			left: 400px;
+			width: 140px;
+			text-align: right;
+		}
+	}
+}
