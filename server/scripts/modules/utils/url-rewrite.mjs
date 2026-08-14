@@ -48,6 +48,10 @@ const rewriteUrl = (_url) => {
 		url.protocol = window.location.protocol;
 		url.host = window.location.host;
 		url.pathname = `/radar${url.pathname}`;
+	} else if (url.origin === 'https://api-endpoint.mta.info') {
+		url.protocol = window.location.protocol;
+		url.host = window.location.host;
+		url.pathname = `/mta${url.pathname}`;
 	} else if (url.origin === 'https://mesonet.agron.iastate.edu') {
 		url.protocol = window.location.protocol;
 		url.host = window.location.host;

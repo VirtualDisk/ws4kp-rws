@@ -1,0 +1,71 @@
+@use 'shared/_colors'as c;
+@use 'shared/_utils'as u;
+@use 'shared/_positions'as p;
+
+// content must stay clear of the scrolling ticker bar anchored to the bottom of every
+// weather-display screen, so cap the main content the same way the other list screens do
+.weather-display .main.transit {
+	max-height: p.$standard-scroll-height;
+	overflow: hidden;
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.subtitle {
+		text-align: center;
+		font-family: 'Star4000 Small';
+		font-size: 24px;
+		color: c.$column-header-text;
+		padding: 10px 0px 4px 0px;
+	}
+
+	.route-lines {
+		display: flex;
+		justify-content: space-around;
+		align-items: flex-start;
+		padding-top: 14px;
+	}
+
+	.route-line {
+		width: 290px;
+		text-align: center;
+	}
+
+	// route bullet: a filled circle carrying the route letter, colored per NYCT line
+	.bullet {
+		width: 90px;
+		height: 90px;
+		line-height: 90px;
+		border-radius: 50%;
+		margin: 0px auto;
+		font-family: 'Star4000';
+		font-size: 60px;
+		color: black;
+		text-shadow: none;
+	}
+
+	.status {
+		font-size: 24px;
+		padding-top: 12px;
+		// long alert names ("Part Suspended") must not wrap into the detail text below
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.detail {
+		font-family: 'Star4000 Small';
+		font-size: 18px;
+		color: c.$date-time;
+		padding-top: 8px;
+		// cap the alert text at four lines so a long advisory can't push past the ticker
+		display: -webkit-box;
+		-webkit-line-clamp: 4;
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+	}
+
+	.route-line.good .status {
+		color: c.$date-time;
+	}
+}

@@ -51,6 +51,15 @@ export const forecastProxy = async (req, res) => {
 	});
 };
 
+// MTA public GTFS-realtime subway service alerts proxy. The upstream sends permissive CORS
+// headers, so this exists for caching and request logging rather than for browser access.
+export const mtaProxy = async (req, res) => {
+	await cache.handleRequest(req, res, 'https://api-endpoint.mta.info', {
+		serviceName: 'MTA',
+		skipParams: [],
+	});
+};
+
 // NYISO (New York Independent System Operator) public CSV data proxy
 export const nyisoProxy = async (req, res) => {
 	await cache.handleRequest(req, res, 'https://mis.nyiso.com', {
