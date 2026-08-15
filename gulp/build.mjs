@@ -61,6 +61,7 @@ const webpackOptions = {
 				'./server/scripts/modules/nyiso-load.mjs',
 				'./server/scripts/modules/nyiso-pricing.mjs',
 				'./server/scripts/modules/transit.mjs',
+				'./server/scripts/modules/ridgewood-transit.mjs',
 			],
 			dependOn: 'shared',
 		},
@@ -131,6 +132,7 @@ const mjsSources = [
 	'server/scripts/modules/nyiso-load.mjs',
 	'server/scripts/modules/nyiso-pricing.mjs',
 	'server/scripts/modules/transit.mjs',
+	'server/scripts/modules/ridgewood-transit.mjs',
 	'server/scripts/modules/progress.mjs',
 	'server/scripts/modules/media.mjs',
 	'server/scripts/modules/custom-scroll-text.mjs',
@@ -188,6 +190,7 @@ const copyDataFiles = () => src([
 	'datagenerators/output/travelcities.json',
 	'datagenerators/output/regionalcities.json',
 	'datagenerators/output/stations.json',
+	'datagenerators/output/ridgewood-transit.json',
 ]).pipe(dest('./dist/data'));
 
 const imageSources = [

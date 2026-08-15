@@ -1,0 +1,109 @@
+@use 'shared/_colors'as c;
+@use 'shared/_utils'as u;
+@use 'shared/_positions'as p;
+
+// content must stay clear of the scrolling ticker bar anchored to the bottom of every
+// weather-display screen, so cap the main content the same way the other list screens do
+.weather-display .main.ridgewood-transit {
+	max-height: p.$standard-scroll-height;
+	overflow: hidden;
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.subtitle {
+		text-align: center;
+		font-family: 'Star4000 Small';
+		font-size: 22px;
+		color: c.$column-header-text;
+		padding: 6px 0px 4px 0px;
+	}
+
+	.column-headers {
+		background-color: c.$column-header;
+		height: 20px;
+		position: relative;
+		width: 100%;
+		overflow: hidden;
+
+		div {
+			display: inline-block;
+			font-family: 'Star4000 Small';
+			font-size: 24px;
+			color: c.$column-header-text;
+			position: absolute;
+			top: -11px;
+			@include u.text-shadow();
+		}
+
+		.name {
+			left: 90px;
+		}
+
+		.weekday {
+			left: 360px;
+			width: 100px;
+			text-align: center;
+		}
+
+		.weekend {
+			left: 500px;
+			width: 100px;
+			text-align: center;
+		}
+	}
+
+	// 5 stations must fit inside p.$standard-scroll-height alongside the subtitle and
+	// column headers above, so rows run tighter than the 2-line transit.scss bullets
+	.station-lines {
+		padding-top: 6px;
+	}
+
+	.station-row {
+		height: 38px;
+		position: relative;
+		margin-bottom: 4px;
+
+		.bullet {
+			width: 32px;
+			height: 32px;
+			line-height: 32px;
+			border-radius: 50%;
+			position: absolute;
+			left: 24px;
+			top: 0px;
+			text-align: center;
+			font-family: 'Star4000';
+			font-size: 20px;
+			color: black;
+			text-shadow: none;
+		}
+
+		.name {
+			position: absolute;
+			left: 90px;
+			top: 4px;
+			width: 250px;
+			font-family: 'Star4000 Small';
+			font-size: 22px;
+		}
+
+		.weekday,
+		.weekend {
+			position: absolute;
+			top: 3px;
+			width: 100px;
+			text-align: center;
+			font-family: 'Star4000';
+			font-size: 22px;
+		}
+
+		.weekday {
+			left: 360px;
+		}
+
+		.weekend {
+			left: 500px;
+		}
+	}
+}

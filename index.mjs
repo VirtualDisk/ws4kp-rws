@@ -13,6 +13,7 @@ import devTools from './src/com.chrome.devtools.mjs';
 const travelCities = JSON.parse(await readFile('./datagenerators/output/travelcities.json'));
 const regionalCities = JSON.parse(await readFile('./datagenerators/output/regionalcities.json'));
 const stationInfo = JSON.parse(await readFile('./datagenerators/output/stations.json'));
+const ridgewoodTransit = JSON.parse(await readFile('./datagenerators/output/ridgewood-transit.json'));
 
 const app = express();
 const port = process.env.WS4KP_PORT ?? 8080;
@@ -143,6 +144,7 @@ const dataEndpoints = {
 	travelcities: travelCities,
 	regionalcities: regionalCities,
 	stations: stationInfo,
+	'ridgewood-transit': ridgewoodTransit,
 };
 
 Object.entries(dataEndpoints).forEach(([name, data]) => {
