@@ -12,6 +12,10 @@ $gradient-loading-2: #364ac0;
 $gradient-loading-3: #4f99f9;
 $gradient-loading-4: #8ffdfa;
 
+// day-over-day change indicators: a longer wait than yesterday is worse service
+$change-worse: #ff6b6b;
+$change-better: #6bff8f;
+
 $extended-low: #8080FF;
 $wind-chill: #8080FF;
 $heat-index: #e00;

@@ -1,0 +1,14 @@
+# Ridgewood headway collector: one short-lived run per Argo CronWorkflow tick.
+# No frontend build, no dev dependencies -- this image never serves a page, it only reads
+# the MTA realtime feeds and writes JSON to object storage.
+FROM node:24-alpine
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --omit=dev --legacy-peer-deps
+
+COPY bin ./bin
+COPY src ./src
+COPY server/scripts/modules/utils/mta-colors.mjs ./server/scripts/modules/utils/mta-colors.mjs
+
+CMD ["node", "bin/ridgewood-collect.mjs"]

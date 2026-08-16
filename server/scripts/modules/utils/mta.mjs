@@ -1,14 +1,9 @@
 // shared utilities for fetching and interpreting MTA subway service alerts
 // source: MTA's public GTFS-realtime service alerts feed, published as JSON
 import { safeJson } from './fetch.mjs';
+import { ROUTE_COLORS } from './mta-colors.mjs';
 
 const SUBWAY_ALERTS_URL = 'https://api-endpoint.mta.info/Dataservice/mtagtfsfeeds/camsys%2Fsubway-alerts.json';
-
-// official NYCT route bullet colors, keyed by route id
-const ROUTE_COLORS = {
-	M: '#ff6319',
-	L: '#a7a9ac',
-};
 
 // the feed labels every alert with a mercury alert_type; these are ranked so that a route
 // carrying several simultaneous alerts reports its most disruptive condition first

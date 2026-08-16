@@ -9,11 +9,11 @@ import playlist from './src/playlist.mjs';
 import OVERRIDES from './src/overrides.mjs';
 import cache from './proxy/cache.mjs';
 import devTools from './src/com.chrome.devtools.mjs';
+import { readPayload } from './src/ridgewood-headway.mjs';
 
 const travelCities = JSON.parse(await readFile('./datagenerators/output/travelcities.json'));
 const regionalCities = JSON.parse(await readFile('./datagenerators/output/regionalcities.json'));
 const stationInfo = JSON.parse(await readFile('./datagenerators/output/stations.json'));
-const ridgewoodTransit = JSON.parse(await readFile('./datagenerators/output/ridgewood-transit.json'));
 
 const app = express();
 const port = process.env.WS4KP_PORT ?? 8080;
@@ -137,6 +137,40 @@ if (!process.env?.STATIC) {
 
 	// Playlist route is available in server mode (not in static mode)
 	app.get('/playlist.json', playlist);
+
+	// Observed subway headway is accumulated by the collector cron job, not by this
+	// container, which is only alive during broadcasts. Serve whatever the collector last
+	// wrote, holding it briefly in memory so a screen refresh does not mean a storage read
+	// per request. The payload changes on the collector's schedule, so it is never cacheable
+	// downstream for the long periods the other data endpoints use.
+	let cachedPayload = null;
+	let cachedAt = 0;
+	const PAYLOAD_TTL = 60 * 1000;
+
+	app.get('/data/ridgewood-transit.json', async (req, res) => {
+		try {
+			if (!cachedPayload || Date.now() - cachedAt > PAYLOAD_TTL) {
+				const payload = await readPayload();
+				if (payload) {
+					cachedPayload = payload;
+					cachedAt = Date.now();
+				}
+			}
+		} catch (error) {
+			console.error(`Unable to read Ridgewood headway payload: ${error.message}`);
+		}
+
+		if (!cachedPayload) {
+			res.status(503).json({ error: 'no headway data collected yet' });
+			return;
+		}
+
+		res.set({
+			'Cache-Control': 'no-store',
+			'Content-Type': 'application/json',
+		});
+		res.json(cachedPayload);
+	});
 }
 
 // Data endpoints - serve JSON data with long-term caching
@@ -144,7 +178,6 @@ const dataEndpoints = {
 	travelcities: travelCities,
 	regionalcities: regionalCities,
 	stations: stationInfo,
-	'ridgewood-transit': ridgewoodTransit,
 };
 
 Object.entries(dataEndpoints).forEach(([name, data]) => {

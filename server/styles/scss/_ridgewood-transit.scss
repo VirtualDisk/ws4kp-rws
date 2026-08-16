@@ -19,59 +19,25 @@
 		padding: 6px 0px 4px 0px;
 	}
 
-	.column-headers {
-		background-color: c.$column-header;
-		height: 20px;
-		position: relative;
-		width: 100%;
-		overflow: hidden;
-
-		div {
-			display: inline-block;
-			font-family: 'Star4000 Small';
-			font-size: 24px;
-			color: c.$column-header-text;
-			position: absolute;
-			top: -11px;
-			@include u.text-shadow();
-		}
-
-		.name {
-			left: 90px;
-		}
-
-		.weekday {
-			left: 360px;
-			width: 100px;
-			text-align: center;
-		}
-
-		.weekend {
-			left: 500px;
-			width: 100px;
-			text-align: center;
-		}
-	}
-
-	// 5 stations must fit inside p.$standard-scroll-height alongside the subtitle and
-	// column headers above, so rows run tighter than the 2-line transit.scss bullets
+	// 5 stations must fit inside p.$standard-scroll-height alongside the subtitle above,
+	// and each row carries two stacked lines per direction, so the rows run tight
 	.station-lines {
-		padding-top: 6px;
+		padding-top: 4px;
 	}
 
 	.station-row {
-		height: 38px;
+		height: 48px;
 		position: relative;
-		margin-bottom: 4px;
+		margin-bottom: 2px;
 
 		.bullet {
-			width: 32px;
-			height: 32px;
-			line-height: 32px;
+			width: 30px;
+			height: 30px;
+			line-height: 30px;
 			border-radius: 50%;
 			position: absolute;
-			left: 24px;
-			top: 0px;
+			left: 16px;
+			top: 8px;
 			text-align: center;
 			font-family: 'Star4000';
 			font-size: 20px;
@@ -81,29 +47,60 @@
 
 		.name {
 			position: absolute;
-			left: 90px;
-			top: 4px;
-			width: 250px;
+			left: 56px;
+			top: 12px;
+			width: 230px;
 			font-family: 'Star4000 Small';
 			font-size: 22px;
 		}
 
-		.weekday,
-		.weekend {
+		// the M and L stops are labeled with their own terminals rather than a shared column
+		// header, since the two routes point at completely different places
+		.direction {
 			position: absolute;
-			top: 3px;
-			width: 100px;
+			top: 0px;
+			width: 150px;
 			text-align: center;
-			font-family: 'Star4000';
-			font-size: 22px;
+
+			.label {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				color: c.$column-header-text;
+			}
+
+			.readout {
+				white-space: nowrap;
+			}
+
+			.value {
+				font-family: 'Star4000';
+				font-size: 22px;
+			}
+
+			// the change from the prior 24 hours rides alongside the average at a smaller
+			// size so the average stays the number that reads first
+			.change {
+				font-family: 'Star4000 Small';
+				font-size: 18px;
+				padding-left: 6px;
+
+				// a longer wait than yesterday is worse service
+				&.worse {
+					color: c.$change-worse;
+				}
+
+				&.better {
+					color: c.$change-better;
+				}
+			}
 		}
 
-		.weekday {
-			left: 360px;
+		.dir-1 {
+			left: 300px;
 		}
 
-		.weekend {
-			left: 500px;
+		.dir-2 {
+			left: 460px;
 		}
 	}
 }
