@@ -7,16 +7,18 @@ import { loadData } from './utils/data-loader.mjs';
 import WeatherDisplay from './weatherdisplay.mjs';
 import { registerDisplay } from './navigation.mjs';
 
-// a direction with too few observed arrivals shows a placeholder rather than a fabricated
-// average; this is the normal state for the first day the poller runs
-const formatMinutes = (minutes) => (typeof minutes === 'number' ? minutes.toFixed(1) : '--');
+// whole minutes with a trailing 'm', matching how the countdowns read on the MTA's own
+// platform signs. a direction with too few observed arrivals shows a placeholder rather
+// than a fabricated average; this is the normal state for the first day the poller runs
+const formatMinutes = (minutes) => (typeof minutes === 'number' ? `${Math.round(minutes)}m` : '--');
 
-// the change reads as a delta, so it carries an explicit sign; no prior 24-hour window
-// means no comparison to show at all
+// the change reads as a delta, so it carries an explicit sign; rounded the same way as the
+// value it sits next to. no prior 24-hour window means no comparison to show at all
 const formatChange = (minutes) => {
 	if (typeof minutes !== 'number') return '';
-	if (minutes === 0) return '0.0';
-	return `${minutes > 0 ? '+' : '-'}${Math.abs(minutes).toFixed(1)}`;
+	const rounded = Math.round(minutes);
+	if (rounded === 0) return '0m';
+	return `${rounded > 0 ? '+' : '-'}${Math.abs(rounded)}m`;
 };
 
 class RidgewoodTransit extends WeatherDisplay {
