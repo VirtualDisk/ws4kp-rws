@@ -15,3 +15,6 @@ dist/*
 
 #environment variables
 .env
+
+#observed subway arrival history written by the ridgewood headway poller
+data/

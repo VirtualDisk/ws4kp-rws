@@ -1,17 +1,24 @@
 <%- include('header.ejs', {titleDual: {top: 'Ridgewood', bottom: 'Train Times'} , hasTime: true }) %>
 <div class="main ridgewood-transit">
-  <div class="subtitle">Avg. Minutes Between Trains</div>
-  <div class="column-headers">
-    <div class="name">STATION</div>
-    <div class="weekday">WEEKDAY</div>
-    <div class="weekend">WEEKEND</div>
-  </div>
+  <div class="subtitle">Avg. Min Between Trains - Last 24h</div>
   <div class="station-lines">
     <div class="station-row template">
       <div class="bullet"></div>
       <div class="name"></div>
-      <div class="weekday"></div>
-      <div class="weekend"></div>
+      <div class="direction dir-1">
+        <div class="label dir-1-label"></div>
+        <div class="readout">
+          <span class="value dir-1-value"></span>
+          <span class="change dir-1-change"></span>
+        </div>
+      </div>
+      <div class="direction dir-2">
+        <div class="label dir-2-label"></div>
+        <div class="readout">
+          <span class="value dir-2-value"></span>
+          <span class="change dir-2-change"></span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
