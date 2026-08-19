@@ -67,3 +67,13 @@ export const nyisoProxy = async (req, res) => {
 		skipParams: [],
 	});
 };
+
+// Lichess public puzzle API proxy. Like the MTA feed above, the upstream sends permissive
+// CORS headers, so this exists for caching and request logging rather than for browser
+// access -- static deployments fetch lichess.org directly.
+export const lichessProxy = async (req, res) => {
+	await cache.handleRequest(req, res, 'https://lichess.org', {
+		serviceName: 'Lichess',
+		skipParams: [],
+	});
+};

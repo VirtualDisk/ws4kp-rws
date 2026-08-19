@@ -1,0 +1,104 @@
+@use 'shared/_colors'as c;
+@use 'shared/_utils'as u;
+@use 'shared/_positions'as p;
+
+// board geometry: eight 30px squares leave room for the subtitle above and still clear the
+// scrolling ticker anchored to the bottom of every weather-display screen
+$square-size: 30px;
+$board-size: $square-size * 8;
+
+// lichess's own board colors -- the piece glyphs below are tuned to read against these
+$light-square: #f0d9b5;
+$dark-square: #b58863;
+$last-move-square: #cdd26a;
+
+.weather-display .main.chess-puzzle {
+	max-height: p.$standard-scroll-height;
+	overflow: hidden;
+	font-family: 'Star4000';
+	color: c.$title-color;
+	@include u.text-shadow();
+
+	.subtitle {
+		text-align: center;
+		font-family: 'Star4000 Small';
+		font-size: 22px;
+		color: c.$column-header-text;
+		padding: 6px 0px 4px 0px;
+	}
+
+	.body {
+		display: flex;
+		justify-content: center;
+		align-items: flex-start;
+		padding-top: 6px;
+	}
+
+	.board {
+		width: $board-size;
+		height: $board-size;
+		display: grid;
+		grid-template-columns: repeat(8, $square-size);
+		grid-template-rows: repeat(8, $square-size);
+		// the squares carry their own colors, so a plain border is all that separates the
+		// board from the blue background behind it
+		border: 2px solid black;
+		flex: none;
+	}
+
+	.square {
+		width: $square-size;
+		height: $square-size;
+		text-align: center;
+
+		&.light {
+			background-color: $light-square;
+		}
+
+		&.dark {
+			background-color: $dark-square;
+		}
+
+		// the square the previous move landed on and the one it came from, so the position
+		// reads as a moment in a game rather than an arbitrary arrangement
+		&.last-move {
+			background-color: $last-move-square;
+		}
+	}
+
+	// Star4000 has no chess glyphs; FreeSerif is the face that carries U+265A-F in the
+	// headless-chromium image the broadcast screenshots are taken in
+	.glyph {
+		font-family: 'FreeSerif', 'DejaVu Sans', 'Segoe UI Symbol', serif;
+		font-size: 26px;
+		line-height: $square-size;
+		text-shadow: none;
+	}
+
+	// both colors are drawn with the solid glyphs (U+265A-F); the outline glyphs are thin
+	// enough at this size to disappear against a light square. White pieces instead get a
+	// dark outline so they stay legible on both square colors
+	.white-piece .glyph {
+		color: white;
+		text-shadow: 0px 0px 1px black, 0px 1px 1px black, 1px 0px 1px black, -1px 0px 1px black, 0px -1px 1px black;
+	}
+
+	.black-piece .glyph {
+		color: #111111;
+	}
+
+	.info {
+		width: 300px;
+		padding-left: 20px;
+		font-size: 24px;
+		line-height: 30px;
+	}
+
+	.rating,
+	.themes {
+		font-family: 'Star4000 Small';
+		font-size: 20px;
+		color: c.$date-time;
+		padding-top: 10px;
+	}
+}

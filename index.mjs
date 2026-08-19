@@ -3,7 +3,7 @@ import express from 'express';
 import fs from 'fs';
 import { readFile } from 'fs/promises';
 import {
-	weatherProxy, radarProxy, outlookProxy, mesonetProxy, forecastProxy, nyisoProxy, mtaProxy,
+	weatherProxy, radarProxy, outlookProxy, mesonetProxy, forecastProxy, nyisoProxy, mtaProxy, lichessProxy,
 } from './proxy/handlers.mjs';
 import playlist from './src/playlist.mjs';
 import OVERRIDES from './src/overrides.mjs';
@@ -134,6 +134,7 @@ if (!process.env?.STATIC) {
 	app.use('/forecast/', forecastProxy);
 	app.use('/nyiso/', nyisoProxy);
 	app.use('/mta/', mtaProxy);
+	app.use('/lichess/', lichessProxy);
 
 	// Playlist route is available in server mode (not in static mode)
 	app.get('/playlist.json', playlist);
