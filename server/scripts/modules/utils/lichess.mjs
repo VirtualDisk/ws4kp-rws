@@ -86,7 +86,7 @@ const parseDailyPuzzle = (payload) => {
 		squares,
 		whiteToMove,
 		rating: payload?.puzzle?.rating,
-		// two themes is all that fits beside a 240px board without wrapping past the ticker
+		// two themes is all that fits beside a 272px board without wrapping past the ticker
 		themes: (payload?.puzzle?.themes ?? []).slice(0, 2).map(humanizeTheme),
 	};
 };

@@ -2,9 +2,11 @@
 @use 'shared/_utils'as u;
 @use 'shared/_positions'as p;
 
-// board geometry: eight 30px squares leave room for the subtitle above and still clear the
-// scrolling ticker anchored to the bottom of every weather-display screen
-$square-size: 30px;
+// board geometry: the whole display is capped at p.$standard-scroll-height (310px) with
+// overflow hidden -- that ticker clearance, not the 640x480 capture, is what limits the
+// board. Budget: subtitle ~30px + .body padding 2px + board (8 * $square-size) + 4px border,
+// so 34px squares (272px board) land at ~308px and 36px would clip the eighth rank.
+$square-size: 34px;
 $board-size: $square-size * 8;
 
 // lichess's own board colors -- the piece glyphs below are tuned to read against these
@@ -24,14 +26,15 @@ $last-move-square: #cdd26a;
 		font-family: 'Star4000 Small';
 		font-size: 22px;
 		color: c.$column-header-text;
-		padding: 6px 0px 4px 0px;
+		// tight padding: the vertical budget above leaves no slack at 34px squares
+		padding: 2px 0px 2px 0px;
 	}
 
 	.body {
 		display: flex;
 		justify-content: center;
 		align-items: flex-start;
-		padding-top: 6px;
+		padding-top: 2px;
 	}
 
 	.board {
@@ -70,7 +73,8 @@ $last-move-square: #cdd26a;
 	// headless-chromium image the broadcast screenshots are taken in
 	.glyph {
 		font-family: 'FreeSerif', 'DejaVu Sans', 'Segoe UI Symbol', serif;
-		font-size: 26px;
+		// derived from the square so bumping $square-size moves the pieces with it
+		font-size: $square-size * 0.86;
 		line-height: $square-size;
 		text-shadow: none;
 	}
