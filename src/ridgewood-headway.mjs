@@ -88,8 +88,11 @@ const RETENTION_SECONDS = (2 * DAY) / SECOND;
 // a prediction that stops appearing without ever reaching its arrival time (cancelled or
 // rerouted trip) is abandoned rather than recorded
 const PENDING_MAX_AGE_SECONDS = (2 * HOUR) / SECOND;
-// a window with fewer arrivals than this has too few gaps to average meaningfully
-const MIN_SAMPLES = 3;
+// a window with fewer arrivals than this has too few gaps to average meaningfully. a
+// healthy 24 hours at these stops holds well over a hundred arrivals, so this is a floor
+// no working stop approaches -- it exists to make a collection failure render N/A rather
+// than a plausible-looking average over the handful of trains that did get through
+const MIN_SAMPLES = 20;
 
 // binary-safe fetch -- the feeds are protobuf, so the response cannot be decoded as utf8
 // on the way in the way the JSON alerts feed in utils/mta.mjs can be
@@ -116,6 +119,26 @@ const toNumber = (value) => {
 	return Number.isFinite(number) ? number : null;
 };
 
+// the service day a trip belongs to, as the feed's own YYYYMMDD string.
+//
+// NYCT reuses trip ids every service day: "091700_L..N" names the trip that originated at
+// 09:17:00, and the identical id comes back tomorrow for tomorrow's train. An arrival key
+// built from the trip id alone is therefore not unique over time, and every train after the
+// first day collides with its counterpart from the day before.
+const serviceDateFor = (trip, arrival) => {
+	const startDate = trip?.startDate;
+	if (typeof startDate === 'string' && /^\d{8}$/.test(startDate)) return startDate;
+
+	// an ADDED or otherwise unscheduled trip may carry no startDate; derive one from the
+	// arrival rather than let "undefined" into the key, which would reintroduce exactly the
+	// collision this exists to prevent. Service days run past midnight, so shift back four
+	// hours before taking the date: a 01:30 train belongs to the previous day's service.
+	const parts = Object.fromEntries(new Intl.DateTimeFormat('en-CA', {
+		timeZone: 'America/New_York', year: 'numeric', month: '2-digit', day: '2-digit',
+	}).formatToParts(new Date((arrival * SECOND) - (4 * HOUR))).map((part) => [part.type, part.value]));
+	return `${parts.year}${parts.month}${parts.day}`;
+};
+
 // average gap between consecutive arrivals, in minutes rounded to 0.1; n arrivals give
 // n-1 gaps, so a window needs at least two entries before any average exists
 const averageHeadwayMinutes = (timestamps) => {
@@ -126,8 +149,9 @@ const averageHeadwayMinutes = (timestamps) => {
 	return Math.round((averageSeconds / 60) * 10) / 10;
 };
 
-// an empty history; arrivals are keyed "tripId|stopId" so a trip re-observed across runs
-// cannot double-count, and pending holds predictions that have not yet come to pass
+// an empty history; arrivals are keyed "tripId|serviceDate|stopId" so a trip re-observed
+// across runs cannot double-count while the same trip id on the next service day still
+// counts as its own train, and pending holds predictions that have not yet come to pass
 const emptyState = () => ({ observedSince: null, arrivals: {}, pending: {} });
 
 // state survives between collector runs in object storage, or on local disk when S3 is not
@@ -220,7 +244,10 @@ const pollFeeds = async () => {
 				if (!TRACKED_STOP_IDS.has(update?.stopId)) return;
 				const arrival = toNumber(update.arrival?.time) ?? toNumber(update.departure?.time);
 				if (!arrival) return;
-				seen[`${tripId}|${update.stopId}`] = { stopId: update.stopId, tripId, arrival };
+				const serviceDate = serviceDateFor(tripUpdate.trip, arrival);
+				seen[`${tripId}|${serviceDate}|${update.stopId}`] = {
+					stopId: update.stopId, tripId, serviceDate, arrival,
+				};
 			});
 		});
 	}));
