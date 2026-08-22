@@ -34,6 +34,8 @@ class ChessPuzzle extends WeatherDisplay {
 
 		const squares = this.data.squares.map((square) => {
 			const cell = this.fillTemplate('square', { glyph: square.piece?.glyph ?? '' });
+			// the white-fill layer is drawn by CSS from this attribute (see _chess-puzzle.scss)
+			cell.querySelector('.glyph').dataset.fill = square.piece?.fill ?? '';
 			cell.classList.add(square.light ? 'light' : 'dark');
 			if (square.highlight) cell.classList.add('last-move');
 			if (square.piece) cell.classList.add(square.piece.white ? 'white-piece' : 'black-piece');

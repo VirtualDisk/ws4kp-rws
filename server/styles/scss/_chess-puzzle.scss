@@ -88,6 +88,22 @@ $last-move-square: #cdd26a;
 		line-height: $square-size;
 		color: #111111;
 		text-shadow: none;
+		position: relative;
+	}
+
+	// white pieces are hollow outlines, which all but disappear on a light square -- so the
+	// same piece's filled black glyph (data-fill, set in chess-puzzle.mjs) is painted white
+	// directly underneath, giving a white body inside the black outline. The two glyphs share
+	// their metrics, so they line up exactly; the negative z-index keeps the fill behind the
+	// outline but still above the square's own background.
+	.white-piece .glyph::before {
+		content: attr(data-fill);
+		color: white;
+		position: absolute;
+		left: 0px;
+		right: 0px;
+		top: 0px;
+		z-index: -1;
 	}
 
 	.info {

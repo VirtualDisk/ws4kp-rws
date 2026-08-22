@@ -26,6 +26,19 @@ const PIECE_GLYPHS = {
 	p: 'o',
 };
 
+// Merida's white glyphs are hollow outlines, so a white piece on a light square reads as
+// little more than a line drawing. The black glyph of the same piece is the *filled*
+// silhouette of that exact shape (identical metrics -- the two overlay pixel-for-pixel), so
+// the display paints it white underneath the outline to fill the piece in.
+const WHITE_FILL_GLYPHS = {
+	K: 'l',
+	Q: 'w',
+	R: 't',
+	B: 'v',
+	N: 'm',
+	P: 'o',
+};
+
 const FILES = 'abcdefgh';
 
 // lichess writes themes in camelCase ("veryLong", "mateIn2"); split them into words so they
@@ -46,6 +59,8 @@ const parsePlacement = (placement) => {
 			}
 			squares.push({
 				glyph: PIECE_GLYPHS[character],
+				// only white pieces need the fill layer; black glyphs are already solid
+				fill: WHITE_FILL_GLYPHS[character] ?? '',
 				// FEN spells white pieces in upper case
 				white: character === character.toUpperCase(),
 			});
