@@ -2,6 +2,15 @@
 @use 'shared/_utils'as u;
 @use 'shared/_positions'as p;
 
+// Chess Merida (MPL-2.0, server/fonts/ChessMerida-LICENSE.txt) -- vendored so the board
+// renders identically wherever it is drawn, rather than depending on whatever chess glyphs
+// the browser image happens to carry
+@font-face {
+	font-family: 'ChessMerida';
+	src: url('../fonts/chessmerida-webfont.woff') format('woff'), url('../fonts/chessmerida-webfont.ttf') format('truetype');
+	font-display: swap;
+}
+
 // board geometry: the whole display is capped at p.$standard-scroll-height (310px) with
 // overflow hidden -- that ticker clearance, not the 640x480 capture, is what limits the
 // board. Budget: subtitle ~30px + .body padding 2px + board (8 * $square-size) + 4px border,
@@ -69,26 +78,16 @@ $last-move-square: #cdd26a;
 		}
 	}
 
-	// Star4000 has no chess glyphs; FreeSerif is the face that carries U+265A-F in the
-	// headless-chromium image the broadcast screenshots are taken in
+	// Star4000 has no chess glyphs; Chess Merida (@font-face above) carries them, and unlike
+	// the Unicode code points it has separate outline (white) and filled (black) glyphs, so
+	// both piece colors are inked the same and the font draws the distinction
 	.glyph {
-		font-family: 'FreeSerif', 'DejaVu Sans', 'Segoe UI Symbol', serif;
-		// derived from the square so bumping $square-size moves the pieces with it
-		font-size: $square-size * 0.86;
+		font-family: 'ChessMerida', serif;
+		// Merida's glyphs fill the em box, so the square size is the font size
+		font-size: $square-size;
 		line-height: $square-size;
-		text-shadow: none;
-	}
-
-	// both colors are drawn with the solid glyphs (U+265A-F); the outline glyphs are thin
-	// enough at this size to disappear against a light square. White pieces instead get a
-	// dark outline so they stay legible on both square colors
-	.white-piece .glyph {
-		color: white;
-		text-shadow: 0px 0px 1px black, 0px 1px 1px black, 1px 0px 1px black, -1px 0px 1px black, 0px -1px 1px black;
-	}
-
-	.black-piece .glyph {
 		color: #111111;
+		text-shadow: none;
 	}
 
 	.info {

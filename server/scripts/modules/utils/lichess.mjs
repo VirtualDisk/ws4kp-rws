@@ -7,13 +7,23 @@ const DAILY_PUZZLE_URL = 'https://lichess.org/api/puzzle/daily';
 
 // the puzzle payload carries a full FEN, so the PGN in the same response never has to be
 // replayed; only the placement field and the side to move are needed to draw the board
+//
+// pieces are drawn with the vendored Chess Merida webfont (server/fonts/), which maps them
+// to plain ASCII letters with separate outline (white) and filled (black) glyphs -- so this
+// table is keyed by the FEN character directly, case included, rather than by piece type
 const PIECE_GLYPHS = {
-	k: '♚',
-	q: '♛',
-	r: '♜',
-	b: '♝',
-	n: '♞',
-	p: '♟',
+	K: 'k',
+	Q: 'q',
+	R: 'r',
+	B: 'b',
+	N: 'n',
+	P: 'p',
+	k: 'l',
+	q: 'w',
+	r: 't',
+	b: 'v',
+	n: 'm',
+	p: 'o',
 };
 
 const FILES = 'abcdefgh';
@@ -35,7 +45,7 @@ const parsePlacement = (placement) => {
 				return;
 			}
 			squares.push({
-				glyph: PIECE_GLYPHS[character.toLowerCase()],
+				glyph: PIECE_GLYPHS[character],
 				// FEN spells white pieces in upper case
 				white: character === character.toUpperCase(),
 			});
